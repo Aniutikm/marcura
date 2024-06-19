@@ -4,39 +4,24 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Route } from '../models/route.model';
 
-
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
-  private csvUrl = 'src/web_challenge.csv';
+  private apiUrl = 'http://localhost:3000/data'; // URL of the Express server
 
   constructor(private http: HttpClient) {}
 
   getRoutes(): Observable<Route[]> {
-    return this.http.get(this.csvUrl, { responseType: 'text' }).pipe(
-      map(csvData => this.parseCsv(csvData))
+    return this.http.get<any[]>(this.apiUrl).pipe(
+      map(data => data.map(item => ({
+        route_id: item.route_id,
+        from_port: item.from_port,
+        to_port: item.to_port,
+        leg_duration: +item.leg_duration,
+        points: JSON.parse(item.points) as [number, number, number, number | null][]
+      })))
     );
-  }
-
-  private parseCsv(csvData: string): Route[] {
-    const lines = csvData.split('\n');
-    const headers = lines[0].split(',');
-    const routes: Route[] = [];
-
-    for (let i = 1; i < lines.length; i++) {
-      const currentLine = lines[i].split(',');
-      const points = JSON.parse(currentLine[4]);
-      routes.push({
-        route_id: currentLine[0],
-        from_port: currentLine[1],
-        to_port: currentLine[2],
-        leg_duration: +currentLine[3],
-        points: points,
-      });
-    }
-
-    return routes;
   }
 }
 
