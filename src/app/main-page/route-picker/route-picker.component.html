@@ -1,10 +1,8 @@
-<mat-form-field>
-    <mat-label>Route</mat-label>
-    <mat-select [(ngModel)]="selectedRoute" (selectionChange)="onRouteChange($event)">
-      <mat-option *ngFor="let route of routes" [value]="route">
-        {{ route.from_port }} to {{ route.to_port }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  
-  
+<div class="route-picker">
+  <label for="route-select">Select a Route:</label>
+  <select id="route-select" (change)="onRouteChange($event)">
+    <option *ngFor="let route of routes" [value]="route.route_id">
+      {{ route.route_id }}
+    </option>
+  </select>
+</div>

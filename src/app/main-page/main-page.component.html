@@ -1,3 +1,3 @@
-<app-map></app-map>
-<app-route-picker></app-route-picker>
-<app-speed-chart></app-speed-chart>
+<app-route-picker (routeSelected)="onRouteSelected($event)"></app-route-picker>
+<app-map [route]="selectedRoute"></app-map>
+<app-speed-chart [route]="selectedRoute"></app-speed-chart>
